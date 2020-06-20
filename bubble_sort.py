@@ -49,9 +49,15 @@ class BubbleSort(Scene):
                     swap_x(rects[rect_id[j]], rects[rect_id[j+1]], run_time=0.05)
                     rect_id[j], rect_id[j+1] = rect_id[j+1], rect_id[j]
                 else:
-                    self.wait(0.05)
-                    rects[rect_id[j]].set_color(WHITE)
-                    rects[rect_id[j+1]].set_color(RED)
+                    rects[rect_id[j]].generate_target()
+                    rects[rect_id[j+1]].generate_target()
+                    rects[rect_id[j]].target.set_color(WHITE)
+                    rects[rect_id[j+1]].target.set_color(RED)
+                    self.play(
+                        MoveToTarget(rects[rect_id[j]]),
+                        MoveToTarget(rects[rect_id[j+1]]),
+                        run_time=0.05,
+                    )
 
             rects[rect_id[i]].set_color(GREEN)
         rects[rect_id[0]].set_color(GREEN)
