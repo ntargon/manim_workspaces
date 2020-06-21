@@ -10,10 +10,9 @@ class BubbleSort(Scene):
         n = 40
         bar_width = 0.1
         bar_height = 4/n
-        rects = [ Rectangle(width=bar_width, height=bar_height*(i+1), stroke_color=WHITE, stroke_width=0.1, fill_opacity=1, color=WHITE) for i in range(n) ]
-        VGroup(*rects).arrange(RIGHT, aligned_edge=BOTTOM, buff=0.01)
+        rects = VGroup(*[ Rectangle(width=bar_width, height=bar_height*(i+1), stroke_color=WHITE, stroke_width=0.1, fill_opacity=1, color=WHITE) for i in range(n) ])
+        rects.arrange(RIGHT, aligned_edge=BOTTOM, buff=0.01)
 
-        self.add(*rects)
 
 
         def swap_x(r1, r2, run_time=1):
@@ -38,6 +37,7 @@ class BubbleSort(Scene):
         for rect in rects:
             rect.move_to(rect.target.get_center())
 
+        self.play(FadeIn(rects))
         self.wait(1)
 
 
@@ -46,9 +46,11 @@ class BubbleSort(Scene):
             rects[rect_id[0]].set_color(RED)
             for j in range(i):
                 if rects[rect_id[j]].height > rects[rect_id[j+1]].height:
-                    swap_x(rects[rect_id[j]], rects[rect_id[j+1]], run_time=0.05)
+                    self.add_sound("./A.wav", 0.02)
+                    swap_x(rects[rect_id[j]], rects[rect_id[j+1]], run_time=0.02)
                     rect_id[j], rect_id[j+1] = rect_id[j+1], rect_id[j]
                 else:
+                    self.add_sound("./G.wav", 0.02)
                     rects[rect_id[j]].generate_target()
                     rects[rect_id[j+1]].generate_target()
                     rects[rect_id[j]].target.set_color(WHITE)
@@ -56,7 +58,7 @@ class BubbleSort(Scene):
                     self.play(
                         MoveToTarget(rects[rect_id[j]]),
                         MoveToTarget(rects[rect_id[j+1]]),
-                        run_time=0.05,
+                        run_time=0.02,
                     )
 
             rects[rect_id[i]].set_color(GREEN)
@@ -64,3 +66,11 @@ class BubbleSort(Scene):
 
         self.wait()
 
+class AudioTest(Scene):
+    def construct(self):
+        self.wait()
+        group_dots = VGroup(*[Dot() for _ in range(3)])
+        group_dots.arrange_submobjects(RIGHT)
+        for dot in group_dots:
+            self.add_sound("./sounds/click.wav")
+            self.play(FadeIn(dot))
